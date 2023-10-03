@@ -45,6 +45,7 @@ function unpack(encoded_firmware) {
         log("CRC check passed...");
     } else {
         log("WARNING: CRC CHECK FAILED! FIRMWARE NOT VALID!\nMake sure to choose a flashable bin file. ");
+        return null;
     }
 
     const decoded_firmware = firmware_xor(encoded_firmware.slice(0, -2));
