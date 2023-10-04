@@ -37,10 +37,11 @@ function loadFirmwareFromUrl(theUrl)
 {
     document.getElementById('console').value = "";
     log("Loading file from url: "+ theUrl+'\n')
-    fetch('https://proxy.cors.sh/' + theUrl, {
-        headers: {
-        'x-cors-api-key': 'temp_2f1bf656ef75047798830d7dbbc09bd6'
-        }
+    fetch('https://api.codetabs.com/v1/proxy?quest=' + theUrl, {
+        // headers: {
+        //     'Access-Control-Allow-Origin':'*'
+        //     'x-cors-api-key': 'temp_2f1bf656ef75047798830d7dbbc09bd6'
+        // }
       })
     .then(res => {
         if (res.ok) {
