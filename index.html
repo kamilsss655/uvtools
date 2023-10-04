@@ -5,15 +5,15 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta property="og:title" content=UVMOD - Online Quansheng Firmware Patcher>
-  <meta property="og:site_name" content=UVMOD>
+  <meta property="og:title" content=UVTools - Online Quansheng Programming Tools>
+  <meta property="og:site_name" content=UVTools>
   <meta property="og:url" content=https://whosmatt.github.io/uvmod />
   <meta property="og:description"
     content="Web-based tool to generate and flash customizable modded firmware, edit the configuration, and flash open source firmware for various Quansheng handheld radios.">
   <meta property="og:type" content=website>
   <meta property="og:image" content=https://whosmatt.github.io/uvmod/img/banner.webp>
 
-  <title>UVMOD</title>
+  <title>UVTools</title>
 
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
   <!-- Custom fonts for this template-->
@@ -125,8 +125,8 @@
   <div id="wrapper animated--grow-in" class="wrapper">
 
     <!-- Sidebar -->
-    <div id="navbar-placeholder" class="sidebar toggled"></div>
-    <script src="js/navbar.js"></script>
+    <!-- <div id="navbar-placeholder" class="sidebar toggled"></div>
+    <script src="js/navbar.js"></script> -->
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="w-100">
@@ -170,15 +170,6 @@
                     </a>
                   </div>
 
-                  <div class="mt-2 d-flex">
-                    <a id="batCalButton" class="btn btn-primary btn-icon-split w-100">
-                      <span class="icon text-white-50">
-                        <i class="fab fa-battery-empty"></i>
-                      </span>
-                      <span class="text w-100">Calibrate battery</span>
-                    </a>
-                  </div>
-
                 </div>
 
               </div>
@@ -212,84 +203,20 @@
   <script src="js/qsSerial.js"></script>
   <script src="js/modframework.js"></script>
   <script src="js/tool_patcher.js"></script>
-  <script src="js/libuvk5.js"></script>
-  <script src="js/batt_calibrator.js"></script>
+  <!-- <script src="js/libuvk5.js"></script>
+  <script src="js/batt_calibrator.js"></script> -->
 
-  <!-- Easter egg, click the title -->
   <script>
-    const marqueediv = document.getElementById("marquee");
 
-    (function ($, window, undefined) {
-      $.fn.marqueeify = function (options) {
-        var settings = $.extend({
-          horizontal: true,
-          vertical: true,
-          speed: 100, // In pixels per second
-          container: $(this).parent(),
-          bumpEdge: function () { }
-        }, options);
-
-        return this.each(function () {
-          var containerWidth, containerHeight, elWidth, elHeight, move, getSizes,
-            $el = $(this);
-
-          getSizes = function () {
-            containerWidth = settings.container.outerWidth();
-            containerHeight = settings.container.outerHeight();
-            elWidth = $el.outerWidth();
-            elHeight = $el.outerHeight();
-          };
-
-          move = {
-            right: function () {
-              $el.animate({ left: (containerWidth - elWidth) }, {
-                duration: ((containerWidth / settings.speed) * 1000), queue: false, easing: "linear", complete: function () {
-                  settings.bumpEdge();
-                  move.left();
-                }
-              });
-            },
-            left: function () {
-              $el.animate({ left: 0 }, {
-                duration: ((containerWidth / settings.speed) * 1000), queue: false, easing: "linear", complete: function () {
-                  settings.bumpEdge();
-                  move.right();
-                }
-              });
-            },
-            down: function () {
-              $el.animate({ top: (containerHeight - elHeight) }, {
-                duration: ((containerHeight / settings.speed) * 1000), queue: false, easing: "linear", complete: function () {
-                  settings.bumpEdge();
-                  move.up();
-                }
-              });
-            },
-            up: function () {
-              $el.animate({ top: 0 }, {
-                duration: ((containerHeight / settings.speed) * 1000), queue: false, easing: "linear", complete: function () {
-                  settings.bumpEdge();
-                  move.down();
-                }
-              });
-            }
-          };
-          getSizes();
-          if (settings.horizontal) {
-            move.right();
-          }
-          if (settings.vertical) {
-            move.down();
-          }
-
-          // Make that shit responsive!
-          $(window).resize(function () {
-            getSizes();
-          });
-        });
-      };
-    })(jQuery, window);
-
+    window.onload = function () {
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const firmwareURL = urlParams.get('firmwareURL')
+      if(firmwareURL) {
+        console.log(firmwareURL);
+        loadFirmwareFromUrl(firmwareURL);
+      }
+    }
 
   </script>
 

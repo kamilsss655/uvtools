@@ -7,8 +7,61 @@ const flashButton = document.getElementById('flashButton');
 let rawVersion = null; // stores the raw version data for fwpack.js and qsflash.js
 let rawFirmware = null; // stores the raw firmware data for qsflash.js
 
+
+function loadFW(encoded_firmware)
+{
+    const flashButton = document.getElementById('flashButton');
+    
+    flashButton.classList.add('disabled');
+
+    const unpacked_firmware = unpack(encoded_firmware);
+
+    log(`Detected firmware version: ${new TextDecoder().decode(rawVersion.subarray(0, rawVersion.indexOf(0)))}`);
+
+    rawFirmware = unpacked_firmware;
+
+    // Check size
+    const current_size = rawFirmware.length;
+    const max_size = 0xEFFF;
+    const percentage = (current_size / max_size) * 100;
+    log(`Firmware uses ${percentage.toFixed(2)}% of available memory (${current_size}/${max_size} bytes).`);
+    if (current_size > max_size) {
+        log("WARNING: Firmware is too large and WILL NOT WORK!\nTry disabling mods that take up extra memory.");
+        return;
+    }
+
+    flashButton.classList.remove('disabled');
+}
+
+function loadFirmwareFromUrl(theUrl)
+{
+    document.getElementById('console').value = "";
+    log("Loading file from url: "+ theUrl+'\n')
+    fetch('https://proxy.cors.sh/' + theUrl, {
+        headers: {
+        'x-cors-api-key': 'temp_2f1bf656ef75047798830d7dbbc09bd6'
+        }
+      })
+    .then(res => {
+        if (res.ok) {
+            return res.arrayBuffer();
+        } else {
+            log(`Http error: ${res.status}`);
+            throw new Error(`Http error: ${res.status}`);
+        }
+    }).then(encoded_firmware => {
+        loadFW(new Uint8Array(encoded_firmware));
+        customFileLabel.textContent = theUrl.substring(theUrl.lastIndexOf('/')+1);
+    }).catch((error) => {
+        console.error(error);
+        log('Error while loading firmware, check log above or developer console for details.');
+    });
+}
+
+
 // Update text to show filename after file selection
 customFileInput.addEventListener('change', function () {
+    document.getElementById('console').value = "";
     // Check if a file is selected
     if (this.files.length > 0) {
         // Get the name of the selected file and update the label text
@@ -24,33 +77,12 @@ customFileInput.addEventListener('change', function () {
     
         file
             .then((encoded_firmware) => {
-                document.getElementById('console').value = "";
-                const flashButton = document.getElementById('flashButton');
-                
-                flashButton.classList.add('disabled');
-
-                const unpacked_firmware = unpack(encoded_firmware);
-    
-                log(`Detected firmware version: ${new TextDecoder().decode(rawVersion.subarray(0, rawVersion.indexOf(0)))}`);
-    
-                rawFirmware = unpacked_firmware;
-    
-                // Check size
-                const current_size = rawFirmware.length;
-                const max_size = 0xEFFF;
-                const percentage = (current_size / max_size) * 100;
-                log(`Firmware uses ${percentage.toFixed(2)}% of available memory (${current_size}/${max_size} bytes).`);
-                if (current_size > max_size) {
-                    log("WARNING: Firmware is too large and WILL NOT WORK!\nTry disabling mods that take up extra memory.");
-                    return;
-                }
-    
-                flashButton.classList.remove('disabled');
+                loadFW(encoded_firmware)
             })
             .catch((error) => {
                 console.error(error);
                 log('Error while loading firmware, check log above or developer console for details.');
-            });        
+            });
     } else {
         // If no file is selected, reset the label text
         customFileLabel.textContent = 'Select firmware file';
