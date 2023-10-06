@@ -35,6 +35,8 @@ function loadFW(encoded_firmware)
 
 function loadFirmwareFromUrl(theUrl)
 {
+    $("#spinner").removeClass("d-none");
+
     document.getElementById('console').value = "";
     log("Loading file from url: "+ theUrl+'\n')
     let res = null;
@@ -55,6 +57,8 @@ function loadFirmwareFromUrl(theUrl)
     }).catch((error) => {
         console.error(error);
         log('Error while loading firmware, check log above or developer console for details.');
+    }).finally(()=>{
+        $("#spinner").addClass("d-none");
     });
 }
 
