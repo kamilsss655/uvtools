@@ -41,8 +41,8 @@ function loadFirmwareFromUrl(theUrl)
     log("Loading file from url: "+ theUrl+'\n')
     let res = null;
 
-    fetch('https://corsproxy.egzi.ovh/' + theUrl).catch(err => {
-        return fetch('https://corsproxy.egzi.ovh/' + theUrl);
+    fetch('https://corsproxy.org/?' + theUrl).catch(err => {
+        return fetch('https://corsproxy.org/?' + theUrl);
     })
     .then(res => {
         if (res.ok) {
