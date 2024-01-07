@@ -41,8 +41,8 @@ function loadFirmwareFromUrl(theUrl)
     log("Loading file from url: "+ theUrl+'\n')
     let res = null;
 
-    fetch('https://api.allorigins.win/get?url=' + theUrl).catch(err => {
-        return fetch('https://api.allorigins.win/get?url=' + theUrl);
+    fetch('https://api.allorigins.win/raw?url=' + theUrl).catch(err => {
+        return fetch('https://api.allorigins.win/raw?url=' + theUrl);
     })
     .then(res => {
         if (res.ok) {
